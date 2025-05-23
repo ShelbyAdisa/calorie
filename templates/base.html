@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Calorie Tracker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-2xl font-bold">
+                    <a href="{% url 'dashboard' %}" class="hover:text-blue-200">Calorie Tracker</a>
+                </h1>
+                <div class="space-x-4">
+                    <a href="{% url 'dashboard' %}" class="hover:text-blue-200 px-3 py-2 rounded">Dashboard</a>
+                    <a href="{% url 'add_food_item' %}" class="hover:text-blue-200 px-3 py-2 rounded">Add Food</a>
+                    <a href="{% url 'log_intake' %}" class="hover:text-blue-200 px-3 py-2 rounded">Log Intake</a>
+                    <a href="{% url 'food_items' %}" class="hover:text-blue-200 px-3 py-2 rounded">Food Items</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mx-auto px-4 py-4">
+            {% for message in messages %}
+                <div class="alert bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Calorie Tracker. Built with Django & Tailwind CSS.</p>
+        </div>
+    </footer>
+</body>
+</html>
