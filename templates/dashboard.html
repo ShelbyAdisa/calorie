@@ -19,92 +19,41 @@
                 <p class="text-blue-100 mt-2">{{ today_intakes|length }} item{{ today_intakes|length|pluralize }} consumed</p>
             </div>
             <div class="text-right">
-                <a href="{% url 'log_intake' %}" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-200">
+                <a href="{% url 'log' %}" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-200">
                     Log Food Intake
                 </a>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Today's Intake -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Today's Food Intake</h3>
-                {% if today_intakes %}
-                    <a href="{% url 'reset_daily_calories' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">
-                        Reset Day
-                    </a>
-                {% endif %}
-            </div>
-            
-            {% if today_intakes %}
-                <div class="space-y-3">
-                    {% for intake in today_intakes %}
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-800">{{ intake.food_item.name }}</h4>
-                                <p class="text-sm text-gray-600">
-                                    {{ intake.quantity }} x {{ intake.food_item.serving_size }}
-                                    • {{ intake.time_consumed|time:"g:i A" }}
-                                </p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold text-lg text-blue-600">{{ intake.total_calories }} cal</p>
-                                <form method="post" action="{% url 'delete_intake' intake.id %}" class="inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-500 hover:text-red-700 text-sm">
-                                        Remove
-                                    </button>
-                                </form>
-                            </div>
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+        <div class="space-y-3">
+            <a href="{% url 'log' %}" class="block w-full bg-green-500 text-white text-center py-3 rounded-lg hover:bg-green-600 transition duration-200">
+                 Log Food Intake
+            </a>
+            <a href="{% url 'addfood' %}" class="block w-full bg-blue-500 text-white text-center py-3 rounded-lg hover:bg-blue-600 transition duration-200">
+                Add New Food Item
+            </a>
+            <a href="{% url 'fooditems' %}" class="block w-full bg-purple-500 text-white text-center py-3 rounded-lg hover:bg-purple-600 transition duration-200">
+                View All Food Items
+            </a>
+        </div>
+
+        {% if recent_foods %}
+            <div class="mt-6">
+                <h4 class="font-semibold text-gray-700 mb-3">Recent Food Items</h4>
+                <div class="space-y-2">
+                    {% for food in recent_foods|slice:":5" %}
+                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-700">{{ food.name }}</span>
+                            <span class="text-sm font-semibold text-blue-600">{{ food.calories_per_serving }} cal</span>
                         </div>
                     {% endfor %}
                 </div>
-            {% else %}
-                <div class="text-center py-8">
-                    <div class="text-gray-400 mb-4">
-                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <p class="text-gray-500 mb-4">No food intake logged for today</p>
-                    <a href="{% url 'log_intake' %}" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
-                        Log Your First Meal
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
-            <div class="space-y-3">
-                <a href="{% url 'log_intake' %}" class="block w-full bg-green-500 text-white text-center py-3 rounded-lg hover:bg-green-600 transition duration-200">
-                    📊 Log Food Intake
-                </a>
-                <a href="{% url 'add_food_item' %}" class="block w-full bg-blue-500 text-white text-center py-3 rounded-lg hover:bg-blue-600 transition duration-200">
-                    ➕ Add New Food Item
-                </a>
-                <a href="{% url 'food_items' %}" class="block w-full bg-purple-500 text-white text-center py-3 rounded-lg hover:bg-purple-600 transition duration-200">
-                    📋 View All Food Items
-                </a>
             </div>
-
-            {% if recent_foods %}
-                <div class="mt-6">
-                    <h4 class="font-semibold text-gray-700 mb-3">Recent Food Items</h4>
-                    <div class="space-y-2">
-                        {% for food in recent_foods|slice:":5" %}
-                            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-                                <span class="text-sm text-gray-700">{{ food.name }}</span>
-                                <span class="text-sm font-semibold text-blue-600">{{ food.calories_per_serving }} cal</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

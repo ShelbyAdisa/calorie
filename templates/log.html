@@ -18,25 +18,33 @@
                 {% if form.food_item.errors %}
                     <p class="mt-1 text-sm text-red-600">{{ form.food_item.errors.0 }}</p>
                 {% endif %}
-                <p class="mt-1 text-sm text-gray-500">Don't see your food? <a href="{% url 'add_food_item' %}" class="text-blue-500 hover:text-blue-700">Add it here</a></p>
+                <p class="mt-1 text-sm text-gray-500">Don't see your food? <a href="{% url 'addfood' %}" class="text-blue-500 hover:text-blue-700">Add it here</a></p>
             </div>
             
             <div>
                 <label for="{{ form.quantity.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
                     Quantity (Number of Servings) *
                 </label>
-                {{ form.quantity }}
+                <select name="quantity" id="{{ form.quantity.id_for_label }}" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select quantity...</option>
+                    <option value="0.25">1/4 serving</option>
+                    <option value="0.5">1/2 serving</option>
+                    <option value="0.75">3/4 serving</option>
+                    <option value="1">1 serving</option>
+                    <option value="1.25">1 1/4 servings</option>
+                    <option value="1.5">1 1/2 servings</option>
+                    <option value="1.75">1 3/4 servings</option>
+                    <option value="2">2 servings</option>
+                    <option value="2.5">2 1/2 servings</option>
+                    <option value="3">3 servings</option>
+                    <option value="3.5">3 1/2 servings</option>
+                    <option value="4">4 servings</option>
+                    <option value="5">5 servings</option>
+                </select>
                 {% if form.quantity.errors %}
                     <p class="mt-1 text-sm text-red-600">{{ form.quantity.errors.0 }}</p>
                 {% endif %}
                 <p class="mt-1 text-sm text-gray-500">How many servings did you consume?</p>
-            </div>
-            
-            <div id="calorie-preview" class="hidden p-4 bg-green-50 rounded-lg border border-green-200">
-                <p class="text-green-800">
-                    <span class="font-semibold">Estimated Calories:</span> 
-                    <span id="estimated-calories" class="text-2xl font-bold">0</span> cal
-                </p>
             </div>
             
             <div class="flex space-x-4">
@@ -48,100 +56,6 @@
                 </a>
             </div>
         </form>
-        
-        <div class="mt-8 p-4 bg-yellow-50 rounded-lg">
-            <h3 class="font-semibold text-yellow-800 mb-2">⏰ Tracking Tips</h3>
-            <ul class="text-sm text-yellow-700 space-y-1">
-                <li>• Log your meals as soon as you eat them</li>
-                <li>• Be honest about portion sizes</li>
-                <li>• Use measuring cups or a food scale for accuracy</li>
-                <li>• Remember to log snacks and drinks too!</li>
-            </ul>
-        </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get form elements with error handling
-    const foodSelect = document.getElementById('{{ form.food_item.id_for_label }}');
-    const quantityInput = document.getElementById('{{ form.quantity.id_for_label }}');
-    const caloriePreview = document.getElementById('calorie-preview');
-    const estimatedCalories = document.getElementById('estimated-calories');
-    
-    // Check if elements exist before proceeding
-    if (!foodSelect || !quantityInput || !caloriePreview || !estimatedCalories) {
-        console.error('One or more required elements not found');
-        return;
-    }
-    
-    // Food items data will be fetched via AJAX
-    let foodItems = {};
-    
-    // Fetch food items data on page load
-    async function loadFoodItems() {
-        try {
-            const response = await fetch('{% url "get_food_calories" %}');
-            if (response.ok) {
-                foodItems = await response.json();
-            }
-        } catch (error) {
-            console.error('Error loading food items:', error);
-        }
-    }
-    
-    function updateCaloriePreview() {
-        try {
-            const selectedFoodId = foodSelect.value;
-            const quantityValue = quantityInput.value;
-            
-            // Validate inputs
-            if (!selectedFoodId || !quantityValue) {
-                caloriePreview.classList.add('hidden');
-                return;
-            }
-            
-            const quantity = parseFloat(quantityValue);
-            
-            // Check for valid quantity
-            if (isNaN(quantity) || quantity <= 0) {
-                caloriePreview.classList.add('hidden');
-                return;
-            }
-            
-            // Get calories per serving with fallback
-            const caloriesPerServing = foodItems[selectedFoodId];
-            
-            if (caloriesPerServing === undefined) {
-                console.warn('Calories not found for food item:', selectedFoodId);
-                caloriePreview.classList.add('hidden');
-                return;
-            }
-            
-            // Calculate and display total calories
-            const totalCalories = Math.round(caloriesPerServing * quantity);
-            estimatedCalories.textContent = totalCalories;
-            caloriePreview.classList.remove('hidden');
-            
-        } catch (error) {
-            console.error('Error updating calorie preview:', error);
-            caloriePreview.classList.add('hidden');
-        }
-    }
-    
-    // Add event listeners with error handling
-    try {
-        foodSelect.addEventListener('change', updateCaloriePreview);
-        quantityInput.addEventListener('input', updateCaloriePreview);
-        
-        // Load food items data and then update preview
-        loadFoodItems().then(() => {
-            updateCaloriePreview();
-        });
-        
-    } catch (error) {
-        console.error('Error setting up event listeners:', error);
-    }
-});
-</script>
 {% endblock %}

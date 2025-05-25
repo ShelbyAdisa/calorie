@@ -27,9 +27,9 @@ def dashboard(request):
         'today': today,
     }
     
-    return render(request, 'calorie_tracker/dashboard.html', context)
+    return render(request, 'dashboard.html', context)
 
-def add_food_item(request):
+def addfood(request):
     """
     View for adding new food items to the database
     """
@@ -42,9 +42,9 @@ def add_food_item(request):
     else:
         form = FoodItemForm()
     
-    return render(request, 'calorie_tracker/add_food_item.html', {'form': form})
+    return render(request, 'addfood.html', {'form': form})
 
-def log_intake(request):
+def log(request):
     """
     View for logging daily food intake
     """
@@ -57,14 +57,14 @@ def log_intake(request):
     else:
         form = DailyIntakeForm()
     
-    return render(request, 'calorie_tracker/log_intake.html', {'form': form})
+    return render(request, 'log.html', {'form': form})
 
-def food_items(request):
+def fooditems(request):
     """
     View to display all food items
     """
     items = FoodItem.objects.all()
-    return render(request, 'calorie_tracker/food_items.html', {'food_items': items})
+    return render(request, 'fooditems.html', {'fooditems': items})
 
 def delete_food_item(request, item_id):
     """
@@ -74,9 +74,9 @@ def delete_food_item(request, item_id):
     if request.method == 'POST':
         item.delete()
         messages.success(request, f'{item.name} has been deleted successfully!')
-        return redirect('food_items')
+        return redirect('fooditems')
     
-    return render(request, 'calorie_tracker/confirm_delete.html', {'item': item})
+    return render(request, 'confirm_delete.html', {'item': item})
 
 def delete_intake(request, intake_id):
     """
@@ -88,7 +88,7 @@ def delete_intake(request, intake_id):
         messages.success(request, 'Intake entry deleted successfully!')
         return redirect('dashboard')
     
-    return render(request, 'calorie_tracker/confirm_delete_intake.html', {'intake': intake})
+    return render(request, '/confirm_delete_intake.html', {'intake': intake})
 
 def reset_daily_calories(request):
     """
@@ -100,4 +100,4 @@ def reset_daily_calories(request):
         messages.success(request, f'Reset complete! Removed {deleted_count} entries for today.')
         return redirect('dashboard')
     
-    return render(request, 'calorie_tracker/confirm_reset.html')
+    return render(request, 'confirm_reset.html')
