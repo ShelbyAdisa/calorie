@@ -58,10 +58,10 @@ WSGI_APPLICATION = 'calorie_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'calorie_tracker',
-        'USER': 'calorie_user',  
-        'PASSWORD': 'Calorietracker25!',  
-        'HOST': 'localhost',
+        'NAME': 'shelby_calorie_db',
+        'USER': 'shelby_calorie_db_user',
+        'PASSWORD': 'FcBWRLkEXjXIFnk14MV5Cu7KImzaMKwG',
+        'HOST': 'dpg-d0o2m58dl3ps73a74esg-a.frankfurt-postgres.render.com',
         'PORT': '5432',
     }
 }
