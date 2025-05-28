@@ -1,6 +1,7 @@
 import os
 from decouple import config
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,7 +12,7 @@ SECRET_KEY = config ('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.render.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -54,16 +55,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'calorie_project.wsgi.application'
 
+
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shelby_calorie_db',
-        'USER': 'shelby_calorie_db_user',
-        'PASSWORD': 'FcBWRLkEXjXIFnk14MV5Cu7KImzaMKwG',
-        'HOST': 'dpg-d0o2m58dl3ps73a74esg-a.frankfurt-postgres.render.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse("postgresql://postgresql_i4sy_user:Gk4TzkesuwuwcMIxaemrKtwSc3OuGcxc@dpg-d0pnkvmuk2gs739s1eog-a.oregon-postgres.render.com/postgresql_i4sy")
 }
 
 # Password validation
